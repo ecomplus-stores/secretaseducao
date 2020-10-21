@@ -1,10 +1,10 @@
 {
   "domain": "secretaseducao.netlify.app",
   "currency_symbol": "R$",
-  "primary_color": "#b635a0",
+  "primary_color": "#aa4198",
   "theme": {
-    "bootswatch": "_",
-    "custom": "_"
+    "bootswatch": "lux",
+    "custom": "clean-gray"
   },
   "bg_color": "#f702e3",
   "logo": "/img/uploads/branco-rosa-menu-escrito-recepcao-de-casamento-cartao-2-.png",
@@ -15,7 +15,7 @@
   "mini_logo": "",
   "favicon": "/img/uploads/branco-rosa-menu-escrito-recepcao-de-casamento-cartao-2-.png",
   "country_code": "BR",
-  "secondary_color": "#242c38",
+  "secondary_color": "#0a0a0b",
   "icon": "/img/uploads/branco-rosa-menu-escrito-recepcao-de-casamento-cartao-2-.png",
   "store_id": 1179,
   "description": "Boas Compras",
