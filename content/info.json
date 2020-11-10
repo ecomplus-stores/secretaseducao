@@ -1,18 +1,18 @@
 {
   "shipping": {
     "show": true,
-    "text": "Entregamos para todo o Brasil"
+    "text": "ENTREGAMOS PARA TODO O BRASIL"
   },
   "installments": {
     "show": true,
-    "text": "Parcele sem juros"
+    "text": "PARCELAMOS EM ATE 10X"
   },
   "exchange": {
-    "show": true,
-    "text": "prazo para troca em até 24h"
+    "show": false,
+    "text": ""
   },
   "promo": {
-    "show": true,
+    "show": false,
     "text": "Diferentes promoções ao longo do ano!"
   }
 }
