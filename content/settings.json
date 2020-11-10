@@ -1,12 +1,12 @@
 {
   "domain": "secretaseducao.netlify.app",
   "currency_symbol": "R$",
-  "primary_color": "#aa4198",
+  "primary_color": "#702348",
   "theme": {
-    "bootswatch": "lux",
-    "custom": "clean-gray"
+    "bootswatch": "_",
+    "custom": "_"
   },
-  "bg_color": "#f702e3",
+  "bg_color": "#ffffff",
   "logo": "/img/uploads/branco-rosa-menu-escrito-recepcao-de-casamento-cartao-2-.png",
   "name": "Secreta Sedução",
   "short_name": "Distribuidora",
