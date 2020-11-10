@@ -3,8 +3,8 @@
   "currency_symbol": "R$",
   "primary_color": "#702348",
   "theme": {
-    "bootswatch": "_",
-    "custom": "_"
+    "bootswatch": "lux",
+    "custom": "clean-white"
   },
   "bg_color": "#ffffff",
   "logo": "/img/uploads/branco-rosa-menu-escrito-recepcao-de-casamento-cartao-2-.png",
