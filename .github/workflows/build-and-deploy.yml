@@ -22,6 +22,13 @@ jobs:
       !contains(github.event.head_commit.message, '[skip ci]')
 
     steps:
+      - name: Set remote repo URL
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "::set-output name=url::https://${GITHUB_ACTOR}:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+        id: remote_repo
+
       - name: Checkout
         uses: actions/checkout@v1
         with:
@@ -40,6 +47,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
+      - name: Cache output
+        continue-on-error: true
+        uses: actions/cache@v1
+        with:
+          path: .deploy/publish
+          key: ${{ hashFiles('.bundles.json') }}-${{ hashFiles('template/p*/**') }}-${{ hashFiles('content/**') }}
+
       - name: Install dependencies
         run: npm ci --only=production
 
@@ -53,19 +67,18 @@ jobs:
         env:
           CHANGED_FILES: ${{ steps.changed_files.outputs.all }}
         run: |
-          IS_ECOMPLUS_CD=$(node -p \
-            "const f = JSON.parse('${CHANGED_FILES}'); f.length === 1 && f[0] === '.ecomplus.cd.json'");
-          if [ $IS_ECOMPLUS_CD != false ] && [ -f .bundles.json ]; then
+          IS_ECOMPLUS_CD=$(node -p "const f = JSON.parse('${CHANGED_FILES}'); f.length === 1 && f[0] === '.ecomplus.cd.json'");
+          if [ $IS_ECOMPLUS_CD != false ] && [ -f .bundles.json ] && [ -f .deploy/publish/storefront.js ]; then
             BUILD_SLUG=$(node -p "require('./.ecomplus.cd.json').slug || false");
             if [ $BUILD_SLUG != false ]; then
               npm run build -- --prerender=index,$BUILD_SLUG --no-bundler;
               echo "::set-output name=isg::2";
             else
-              npm run build -- --prerender=index,app/index --prerender-limit=200 --no-bundler;
+              npm run build -- --prerender-limit=1000 --no-bundler;
               echo "::set-output name=isg::1";
             fi
           else
-            npm run build -- --prerender=index,app/index,search,404 --prerender-limit=100;
+            npm run build -- --prerender=index,app/index,search,404 --prerender-limit=300;
             echo "::set-output name=isg::0";
           fi
         id: partial_build
@@ -85,21 +98,27 @@ jobs:
 
       - name: Push changes
         if: steps.git_diff.outputs.diff == 1
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: master
+        continue-on-error: true
+        env:
+          REMOTE_REPO: ${{ steps.remote_repo.outputs.url }}
+        run: git push "${REMOTE_REPO}" HEAD:master --follow-tags
+
+      - name: Clear cache if not ISG
+        if: steps.partial_build.outputs.isg == 0
+        continue-on-error: true
+        run: rm -rf .deploy
 
       - name: Setup output directory to deploy
         run: |
-          mkdir -p .deploy
-          mv dist .deploy/publish
+          mkdir -p .deploy/publish
+          cp -r dist/* .deploy/publish/
           cp -r .netlify/* .deploy/
           cp -r template .deploy/functions/ssr/
           cp -r content .deploy/functions/ssr/
           cp .bundles.json .deploy/functions/ssr/bundles.json
-          mkdir -p .deploy/functions/ssr/template/pages/@ecomplus
+          mkdir -p .deploy/functions/ssr/template/pages/@ecomplus/storefront-template/template
           cp -r node_modules/@ecomplus/widget-* .deploy/functions/ssr/template/pages/@ecomplus/ 2>/dev/null || :
+          cp -r node_modules/@ecomplus/storefront-template/template/pages .deploy/functions/ssr/template/pages/@ecomplus/storefront-template/template/ || :
 
       - name: Clear functions directory
         continue-on-error: true
@@ -110,11 +129,18 @@ jobs:
           npx zip-it-and-ship-it .deploy/functions .deploy/functions-zip
           rm -rf .deploy/functions
 
-      - name: Output ISG state
-        if: steps.partial_build.outputs.isg != 0
+      - name: Reset dist to clear Git ref
+        if: steps.partial_build.outputs.isg == 0
+        continue-on-error: true
         env:
-          ISG_ENUM: ${{ steps.partial_build.outputs.isg }}
-        run: echo $RANDOM > .deploy/.isg
+          REMOTE_REPO: ${{ steps.remote_repo.outputs.url }}
+        run: |
+          git push "${REMOTE_REPO}" --delete dist;
+          git checkout --orphan dist
+          git rm -rf .
+          git commit --no-verify --allow-empty -m "Reset dist [skip ci]"
+          git push "${REMOTE_REPO}" HEAD:dist --force --follow-tags
+          git checkout master
 
       - name: Push to branch dist to trigger deploy
         uses: JamesIves/github-pages-deploy-action@releases/v3
