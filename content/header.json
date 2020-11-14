@@ -2,7 +2,8 @@
   "marketing_stripe": {
     "text": "Seja Bem Vindo!",
     "link": "",
-    "background": "#df2691"
+    "background": "#000000",
+    "color": "#ff00ae"
   },
   "contacts_stripe": {
     "pages": [
