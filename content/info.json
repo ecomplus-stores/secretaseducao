@@ -1,7 +1,7 @@
 {
   "shipping": {
     "show": true,
-    "text": "ENTREGAMOS PARA TODO O BRASIL"
+    "text": "ENVIAMOS PARA TODO O BRASIL"
   },
   "installments": {
     "show": true,
@@ -13,6 +13,6 @@
   },
   "promo": {
     "show": false,
-    "text": "Diferentes promoções ao longo do ano!"
+    "text": ""
   }
 }
