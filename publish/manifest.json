@@ -1,0 +1,37 @@
+{
+  "icons": [
+    {
+      "src": "/icon_512x512.c341512aeed9e342475a47fbe6483d7f.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon_384x384.60170ba118b0b5f55ae02ab6e1fb3d4e.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon_192x192.d0aa3dd949e7cd8ae9df13249a4510a8.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon_128x128.cda0c81f7ee2a82b7e1783f75afc01df.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon_96x96.d5d524796a832530c1b7c63f46d6791c.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    }
+  ],
+  "name": "Secreta Sedução",
+  "short_name": "Distribuidora SexShop",
+  "orientation": "portrait",
+  "display": "standalone",
+  "start_url": ".",
+  "description": "Boas Compras",
+  "background_color": "#ffffff",
+  "theme_color": "#702348"
+}
